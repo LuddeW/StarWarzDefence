@@ -16,7 +16,6 @@ namespace SuperStarWarzTowerDefence
         Vector2 pos;
 
         int spriteAnimation;
-        int speed;
         int x;
 
         public Game1()
@@ -64,7 +63,7 @@ namespace SuperStarWarzTowerDefence
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            spriteBatch.Draw(spriteSheet, new Rectangle((int)pos.X, (int)pos.Y, 100, 100), new Rectangle(185 * SpriteAnimation(), 0* 180, 195, 180), Color.White);
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)pos.X, (int)pos.Y, 100, 100), new Rectangle(186 * SpriteAnimation(), 0* 180, 195, 180), Color.White);
             path.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
