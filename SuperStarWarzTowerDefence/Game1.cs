@@ -1,16 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Spline;
 
 namespace SuperStarWarzTowerDefence
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SimplePath path;
+        Clock clock = new Clock();
+
+        Texture2D spriteSheet;
+        Vector2 pos;
+
+        int spriteAnimation;
+        int speed;
+        int x;
 
         public Game1()
         {
@@ -18,66 +25,63 @@ namespace SuperStarWarzTowerDefence
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+        
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            spriteSheet = Content.Load<Texture2D>(@"stormtrop_spritesheet");
+            pos = new Vector2();
+            path = new SimplePath(GraphicsDevice);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
+        
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
+            clock.AddTime(0.003f);
+            x++;
+            pos = path.GetPos(path.beginT + x);
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(spriteSheet, new Rectangle((int)pos.X, (int)pos.Y, 100, 100), new Rectangle(185 * SpriteAnimation(), 0* 180, 195, 180), Color.White);
+            path.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private int SpriteAnimation()
+        {
+            if (clock.Timer() > 0.1f)
+            {
+                spriteAnimation++;
+                clock.ResetTime();
+                if (spriteAnimation > 3)
+                {
+                    spriteAnimation = 0;
+                }
+            }
+            return spriteAnimation;
         }
     }
 }
