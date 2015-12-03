@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\background.jpg" />
     <Content Include="Content\stormtrop_spritesheet.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
