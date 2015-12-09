@@ -40,6 +40,12 @@
   <ItemGroup>
     <Compile Include="Clock.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameHandler.cs" />
+    <Compile Include="GameObjects\Enemy.cs" />
+    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\Tower\ExplosiveTower.cs" />
+    <Compile Include="GameObjects\Tower\NormalTower.cs" />
+    <Compile Include="GameObjects\Tower\Tower.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\background.jpg" />
+    <Content Include="Content\shot.png" />
     <Content Include="Content\stormtrop_spritesheet.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
