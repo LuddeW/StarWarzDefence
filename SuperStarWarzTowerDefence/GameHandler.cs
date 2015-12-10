@@ -54,8 +54,6 @@ namespace SuperStarWarzTowerDefence
             {
                 e.Update();
             }
-            //x++;
-            //pos = path.GetPos(path.beginT + x);
             ObjectFactory();
         }
 
