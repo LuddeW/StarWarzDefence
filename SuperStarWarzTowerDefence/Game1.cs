@@ -15,8 +15,8 @@ namespace SuperStarWarzTowerDefence
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 500;
-            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 1000;
             //graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
