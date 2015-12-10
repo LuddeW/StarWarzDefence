@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Spline;
 using Microsoft.Xna.Framework;
+using SuperStarWarzTowerDefence.GameObjects;
 
 namespace SuperStarWarzTowerDefence
 {
@@ -15,53 +16,64 @@ namespace SuperStarWarzTowerDefence
         SimplePath path;
         Clock clock = new Clock();
 
-        Texture2D spriteSheet;
-        Texture2D background;
-        Vector2 pos;
+        List<Enemy> enemy;
 
-        int spriteAnimation;
+        Texture2D turtleSprite;
+        Texture2D penguinKing;
+        Texture2D penguinNormal;
+        Texture2D penguinMad;
+        Vector2 pos;
         int x;
 
 
         public GameHandler(Game1 game)
         {
             this.game = game;
+            
         }
 
         public void LoadContent()
         {
-            spriteSheet = game.Content.Load<Texture2D>(@"stormtrop_spritesheet");
-            background = game.Content.Load<Texture2D>(@"background");
+            turtleSprite = game.Content.Load<Texture2D>(@"Turtle");
+            penguinKing = game.Content.Load<Texture2D>(@"Penguin_King");
+            penguinMad = game.Content.Load<Texture2D>(@"Penguin_Mad");
+            penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");
             pos = new Vector2();
             path = new SimplePath(game.GraphicsDevice);
+            enemy = new List<Enemy>();
+            TrutleFactory();
         }
+
 
         public void Update()
         {
+            
             clock.AddTime(0.003f);
-            x++;
-            pos = path.GetPos(path.beginT + x);
+            foreach (Enemy e in enemy)
+            {
+                e.Update();
+            }
+            //x++;
+            //pos = path.GetPos(path.beginT + x);
+        }
+
+        private void TrutleFactory()
+        {
+                Enemy e = new Enemy(turtleSprite, pos, game);
+                enemy.Add(e);
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(background, new Rectangle(-50, -50, 900, 600), Color.White);
-            spriteBatch.Draw(spriteSheet, new Rectangle((int)pos.X, (int)pos.Y, 100, 100), new Rectangle(186 * SpriteAnimation(), 0 * 180, 190, 180), Color.White, 0f, new Vector2(90, 90), SpriteEffects.None, 1f);
-            spriteBatch.Draw(spriteSheet, new Rectangle(0, 0, 100, 100), new Rectangle(186 * 8, 0, 195, 160), Color.White);
-        }
-
-        private int SpriteAnimation()
-        {
-            if (clock.Timer() > 0.1f)
+            //spriteBatch.Draw(turtleSprite, new Rectangle((int)pos.X, (int)pos.Y, 50, 25), Color.White);
+            foreach (Enemy e in enemy)
             {
-                spriteAnimation++;
-                clock.ResetTime();
-                if (spriteAnimation > 3)
-                {
-                    spriteAnimation = 0;
-                }
+                e.Draw(spriteBatch);
             }
-            return spriteAnimation;
+            spriteBatch.Draw(penguinKing, new Rectangle(0, 0, penguinKing.Width, penguinKing.Height), Color.White);
+            spriteBatch.Draw(penguinMad, new Rectangle(250, 250, penguinMad.Width, penguinMad.Height), Color.White);
+            spriteBatch.Draw(penguinNormal, new Rectangle(300,300, penguinNormal.Width, penguinNormal.Height), Color.White);
         }
     }
 }
