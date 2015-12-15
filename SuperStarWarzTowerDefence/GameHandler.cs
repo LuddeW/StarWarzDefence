@@ -7,6 +7,7 @@ using Spline;
 using Microsoft.Xna.Framework;
 using SuperStarWarzTowerDefence.GameObjects;
 using SuperStarWarzTowerDefence.GameObjects.Tower;
+using Microsoft.Xna.Framework.Input;
 
 namespace SuperStarWarzTowerDefence
 {
@@ -25,12 +26,11 @@ namespace SuperStarWarzTowerDefence
         Texture2D penguinNormal;
         Texture2D penguinMad;
         Vector2 pos = new Vector2();
-        int y = 0;
+        KeyboardState prevKeyState = new KeyboardState();
 
         public GameHandler(Game1 game)
         {
             this.game = game;
-            
         }
 
         public void LoadContent()
@@ -38,35 +38,48 @@ namespace SuperStarWarzTowerDefence
             turtleSprite = game.Content.Load<Texture2D>(@"Turtle");
             penguinKing = game.Content.Load<Texture2D>(@"Penguin_King");
             penguinMad = game.Content.Load<Texture2D>(@"Penguin_Mad");
-            penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");
-            
+            penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");            
             path = new SimplePath(game.GraphicsDevice);
             enemy = new List<Enemy>();
             tower = new List<Tower>();
+            
         }
 
+        private bool WasKeyPressed(Keys key, KeyboardState keyState)
+        {
+            return keyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key);
+        }
 
         public void Update()
         {
-            
-            clock.AddTime(0.003f);
+            ObjectFactory();
+            KeyboardState keyState = Keyboard.GetState();
+            if (WasKeyPressed(Keys.D1, keyState))
+            {
+                Tower t = new Tower(penguinNormal, new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y));
+                tower.Add(t);
+            }
+            prevKeyState = keyState;
             foreach (Enemy e in enemy)
             {
                 e.Update();
             }
-            ObjectFactory();
+            clock.AddTime(0.01f);
+            Console.WriteLine(clock.Timer());
         }
 
         private void ObjectFactory()
         {
-            if (y <1)
+            
+            
+            if (clock.Timer() > 1)
             {
                 Enemy e = new Enemy(turtleSprite, pos, game);
                 enemy.Add(e);
-                Tower t = new Tower(penguinMad, new Vector2(100, 100));
-                tower.Add(t);
-                y++;
-            }          
+                clock.ResetTime();
+            }
+           
+                
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -79,9 +92,9 @@ namespace SuperStarWarzTowerDefence
             {
                 t.Draw(spriteBatch);
             }
-            spriteBatch.Draw(penguinKing, new Rectangle(0, 0, penguinKing.Width, penguinKing.Height), Color.White);
+            //spriteBatch.Draw(penguinKing, new Rectangle(0, 0, penguinKing.Width, penguinKing.Height), Color.White);
             path.Draw(spriteBatch);
-            spriteBatch.Draw(penguinNormal, new Rectangle(300,300, penguinNormal.Width, penguinNormal.Height), Color.White);
+            //spriteBatch.Draw(penguinNormal, new Rectangle(300,300, penguinNormal.Width, penguinNormal.Height), Color.White);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace SuperStarWarzTowerDefence
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Clock clock = new Clock();
 
         GameHandler gameHandler;
 
@@ -19,6 +20,7 @@ namespace SuperStarWarzTowerDefence
             graphics.PreferredBackBufferHeight = 1000;
             //graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
