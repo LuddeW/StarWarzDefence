@@ -59,6 +59,16 @@ namespace SuperStarWarzTowerDefence
                 Tower t = new Tower(penguinNormal, new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y));
                 tower.Add(t);
             }
+            if (WasKeyPressed(Keys.D2, keyState))
+            {
+                Tower t = new Tower(penguinMad, new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y));
+                tower.Add(t);
+            }
+            if (WasKeyPressed(Keys.D3, keyState))
+            {
+                Tower t = new Tower(penguinKing, new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y));
+                tower.Add(t);
+            }
             prevKeyState = keyState;
             foreach (Enemy e in enemy)
             {
