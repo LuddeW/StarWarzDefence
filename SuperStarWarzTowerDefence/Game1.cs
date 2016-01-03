@@ -12,6 +12,8 @@ namespace SuperStarWarzTowerDefence
         Clock clock = new Clock();
 
         GameHandler gameHandler;
+        public enum GameState { StartMenu, HighScore, GameScreen, EndScreen }
+        GameState CurrentState = GameState.GameScreen;
 
         public Game1()
         {
@@ -50,8 +52,23 @@ namespace SuperStarWarzTowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            switch (CurrentState)
+            {
+                case GameState.StartMenu:
+                    
+                    break;
+                case GameState.HighScore:
 
-            gameHandler.Update();
+                    break;
+                case GameState.GameScreen:
+                    gameHandler.Update();
+                    break;
+
+                case GameState.EndScreen:
+
+                    break;
+
+            }
             base.Update(gameTime);
         }
 
@@ -59,7 +76,22 @@ namespace SuperStarWarzTowerDefence
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            gameHandler.Draw(spriteBatch);
+            switch (CurrentState)
+            {
+                case GameState.StartMenu:
+                    
+                    break;
+                case GameState.HighScore:
+
+                    break;
+                case GameState.GameScreen:
+                    gameHandler.Draw(spriteBatch);
+                    break;
+                case GameState.EndScreen:
+     
+                    break;
+            }
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }

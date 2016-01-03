@@ -75,7 +75,6 @@ namespace SuperStarWarzTowerDefence
                 e.Update();
             }
             clock.AddTime(0.01f);
-            Console.WriteLine(clock.Timer());
         }
 
         private void ObjectFactory()
