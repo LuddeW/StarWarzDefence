@@ -9,9 +9,13 @@ namespace SuperStarWarzTowerDefence.GameObjects.Tower
 {
     class ExplosiveTower : Tower
     {
-        public ExplosiveTower(Texture2D texture, Vector2 pos) : base(texture, pos)
+        public ExplosiveTower(Texture2D texture, Vector2 pos) : base(texture, pos, 100)
         {
-
+            fireSpeed = 0.5f;
+        }
+        internal Tower Copy()
+        {
+            return new ExplosiveTower(texture, pos);
         }
     }
 }

@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\circle.png" />
     <Content Include="Content\Penguin_King.png" />
     <Content Include="Content\Penguin_Mad.png" />
     <Content Include="Content\Penguin_Normal.png" />

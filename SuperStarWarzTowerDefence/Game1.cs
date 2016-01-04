@@ -12,7 +12,7 @@ namespace SuperStarWarzTowerDefence
         Clock clock = new Clock();
 
         GameHandler gameHandler;
-        public enum GameState { StartMenu, HighScore, GameScreen, EndScreen }
+        public enum GameState { StartMenu, GameScreen, EndScreen }
         GameState CurrentState = GameState.GameScreen;
 
         public Game1()
@@ -57,9 +57,6 @@ namespace SuperStarWarzTowerDefence
                 case GameState.StartMenu:
                     
                     break;
-                case GameState.HighScore:
-
-                    break;
                 case GameState.GameScreen:
                     gameHandler.Update();
                     break;
@@ -80,9 +77,6 @@ namespace SuperStarWarzTowerDefence
             {
                 case GameState.StartMenu:
                     
-                    break;
-                case GameState.HighScore:
-
                     break;
                 case GameState.GameScreen:
                     gameHandler.Draw(spriteBatch);
