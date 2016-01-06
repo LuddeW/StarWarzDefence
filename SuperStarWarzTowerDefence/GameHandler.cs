@@ -17,34 +17,41 @@ namespace SuperStarWarzTowerDefence
 
         SimplePath path;
         Clock clock = new Clock();
-
+        MapHandler mh;
         List<Enemy> enemy;
         List<Tower> tower;
+        float floorpos = 0;
 
+        RenderTarget2D renderTarget;
         Texture2D turtleSprite;
         Texture2D penguinKing;
         Texture2D penguinNormal;
         Texture2D penguinMad;
+        Texture2D floor;
         Tower selcetedTower;
-        Vector2 pos = new Vector2();
+        //Vector2 pos = new Vector2();
         KeyboardState prevKeyState = new KeyboardState();
         ButtonState prevLeftMouseButtonState = ButtonState.Released;
 
         public GameHandler(Game1 game)
         {
             GameHandler.game = game;
+            renderTarget = new RenderTarget2D(game.GraphicsDevice, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
         }
 
-        public void LoadContent()
+        public void LoadContent(SpriteBatch spriteBatch)
         {
+            mh = new MapHandler(game.GraphicsDevice);
+            floor = game.Content.Load<Texture2D>(@"floortd");
             turtleSprite = game.Content.Load<Texture2D>(@"Turtle");
             penguinKing = game.Content.Load<Texture2D>(@"Penguin_King");
             penguinMad = game.Content.Load<Texture2D>(@"Penguin_Mad");
-            penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");       
-            path = new SimplePath(game.GraphicsDevice);
+            penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");
             enemy = new List<Enemy>();
             tower = new List<Tower>();
-            
+            mh.LoadContent();
+            path = mh.GetSimplePath();
+            UpdateRenderTarget(spriteBatch);
         }
 
         private bool WasKeyPressed(Keys key, KeyboardState keyState)
@@ -57,7 +64,7 @@ namespace SuperStarWarzTowerDefence
             return Mouse.GetState().LeftButton == ButtonState.Pressed && prevLeftMouseButtonState == ButtonState.Released;
         }
 
-        public void Update()
+        public void Update(SpriteBatch spriteBatch)
         {
             ObjectFactory();
             KeyboardState keyState = Keyboard.GetState();
@@ -84,11 +91,12 @@ namespace SuperStarWarzTowerDefence
 
             if (WasLeftMouseButtonPressed())
             {
-                if (selcetedTower != null)
+                if (selcetedTower != null && canPlace(selcetedTower))
                 {
                     Tower t = selcetedTower.Copy();
                     t.Activate();
                     tower.Add(t);
+                    UpdateRenderTarget(spriteBatch);
                 }
             }
             prevLeftMouseButtonState = Mouse.GetState().LeftButton;
@@ -96,6 +104,9 @@ namespace SuperStarWarzTowerDefence
             {
                 e.Update();
             }
+
+            
+
             clock.AddTime(0.01f);
         }
 
@@ -105,7 +116,7 @@ namespace SuperStarWarzTowerDefence
             
             if (clock.Timer() > 1)
             {
-                Enemy e = new Enemy(turtleSprite, pos, game);
+                Enemy e = new Enemy(turtleSprite, game, path);
                 enemy.Add(e);
                 clock.ResetTime();
             }
@@ -113,22 +124,59 @@ namespace SuperStarWarzTowerDefence
                 
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawPath(SpriteBatch spriteBatch)
         {
-            foreach (Enemy e in enemy)
+            floorpos = path.beginT - 100;
+            while (floorpos < path.endT)
             {
-                e.Draw(spriteBatch);
+                floorpos += 15;
+                spriteBatch.Draw(floor, path.GetPos(floorpos), new Rectangle(0, 0, floor.Width, floor.Height), Color.White, 0f, new Vector2(floor.Width / 2, floor.Height / 2), 1f, SpriteEffects.None, 1f);
             }
+        }
+
+        public bool canPlace(Tower t)
+        {
+            Color[] pixels = new Color[t.texture.Width * t.texture.Height];
+            Color[] pixels2 = new Color[t.texture.Width * t.texture.Height];
+            t.texture.GetData<Color>(pixels2);
+            renderTarget.GetData(0, new Rectangle((int)t.Pos.X, (int)t.Pos.Y, t.texture.Width, t.texture.Height), pixels, 0, pixels.Length);
+            for (int i = 0; i < pixels.Length; ++i)
+            {
+                if (pixels[i].A > 0.0f && pixels2[i].A > 0.0f)
+                    return false;
+            }
+            return true;
+        }
+
+        public void UpdateRenderTarget(SpriteBatch spriteBatch)
+        {
+            game.GraphicsDevice.SetRenderTarget(renderTarget);
+            game.GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin();
+            DrawPath(spriteBatch);
             foreach (Tower t in tower)
             {
                 t.Draw(spriteBatch);
             }
+           spriteBatch.End();
+            game.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            foreach (Enemy e in enemy)
+            {
+                e.Draw(spriteBatch);
+            }
+            
             if (selcetedTower != null)
             {
                 selcetedTower.Draw(spriteBatch);
             }
+            //mh.Draw(spriteBatch);
             //spriteBatch.Draw(penguinKing, new Rectangle(0, 0, penguinKing.Width, penguinKing.Height), Color.White);
-            path.Draw(spriteBatch);
+            //path.Draw(spriteBatch);
             //spriteBatch.Draw(penguinNormal, new Rectangle(300,300, penguinNormal.Width, penguinNormal.Height), Color.White);
         }
     }

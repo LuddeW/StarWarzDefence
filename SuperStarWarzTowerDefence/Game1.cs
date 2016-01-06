@@ -38,7 +38,7 @@ namespace SuperStarWarzTowerDefence
         {         
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameHandler = new GameHandler(this);
-            gameHandler.LoadContent();
+            gameHandler.LoadContent(spriteBatch);
         }
 
         
@@ -58,7 +58,7 @@ namespace SuperStarWarzTowerDefence
                     
                     break;
                 case GameState.GameScreen:
-                    gameHandler.Update();
+                    gameHandler.Update(spriteBatch);
                     break;
 
                 case GameState.EndScreen:

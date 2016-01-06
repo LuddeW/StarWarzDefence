@@ -46,6 +46,7 @@
     <Compile Include="GameObjects\Tower\ExplosiveTower.cs" />
     <Compile Include="GameObjects\Tower\NormalTower.cs" />
     <Compile Include="GameObjects\Tower\Tower.cs" />
+    <Compile Include="MapHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\circle.png" />
+    <Content Include="Content\floortd.png" />
     <Content Include="Content\Penguin_King.png" />
     <Content Include="Content\Penguin_Mad.png" />
     <Content Include="Content\Penguin_Normal.png" />

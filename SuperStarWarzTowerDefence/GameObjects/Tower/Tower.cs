@@ -10,7 +10,7 @@ namespace SuperStarWarzTowerDefence.GameObjects.Tower
     class Tower : GameObject
     {
         protected Vector2 pos;
-        protected Texture2D texture;
+        public Texture2D texture;
         bool isAactive = false;
         protected int range;
         protected float fireSpeed = 1f;

@@ -11,27 +11,34 @@ namespace SuperStarWarzTowerDefence.GameObjects
     class Enemy : GameObject
     {
         Game1 game;
-        int x = 0;
-        Vector2 pos;
+        int speed = 2;
+        float pos;
+
         Texture2D texture;
         SimplePath path;
-        public Enemy(Texture2D texture, Vector2 pos, Game1 game) : base(texture, pos)
+        public Enemy(Texture2D texture, Game1 game, SimplePath path) : base(texture, Vector2.Zero)
         {
-            this.pos = pos;
+            this.pos = path.beginT;
             this.texture = texture;
             this.game = game;
-            path = new SimplePath(game.GraphicsDevice);
+            this.path = path;
         }
 
         public void Update()
         {
-            x++;      
-            pos = path.GetPos(path.beginT + x);
+                  
+            pos += speed;
+        }
+
+        public Vector2 GetPos()
+        {
+            return path.GetPos(pos);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, pos, Color.White);
+            spriteBatch.Draw(texture, path.GetPos(pos), new Rectangle(0, 0, texture.Width, texture.Height), Color.White, 0f, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
         }
     }
+    
 }
