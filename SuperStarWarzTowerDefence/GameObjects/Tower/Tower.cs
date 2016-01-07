@@ -9,18 +9,20 @@ namespace SuperStarWarzTowerDefence.GameObjects.Tower
 {
     class Tower : GameObject
     {
-        protected Vector2 pos;
-        public Texture2D texture;
+        
+        
         bool isAactive = false;
         protected int range;
         protected float fireSpeed = 1f;
-        Texture2D circle;
-        public Tower(Texture2D texture, Vector2 pos, int range) :base(texture, pos)
+        Texture2D circleRed;
+        Texture2D circleWhite;
+        public bool canPlace = true;
+        public Tower(Texture2D texture, Vector2 pos, int range) :base(texture, pos, new Vector2(texture.Width / 2, texture.Height / 2))
         {
-            this.pos = pos;
-            this.texture = texture;
+            
             this.range = range;
-            circle = CreateCircle(range);
+            circleRed = CreateCircle(range, Color.White);
+            circleWhite = CreateCircle(range, Color.Red);
         }
 
         public Vector2 Pos {  get {return pos;} internal set { pos = value; }}
@@ -33,9 +35,17 @@ namespace SuperStarWarzTowerDefence.GameObjects.Tower
         {
             if (isAactive == false)
             {
-                spriteBatch.Draw(circle, pos, new Rectangle(0, 0, circle.Width, circle.Height), Color.White, 0f, new Vector2(circle.Width / 2, circle.Height / 2), 1f, SpriteEffects.None, 1f);
-            }           
-            spriteBatch.Draw(texture, pos, new Rectangle(0, 0, texture.Width, texture.Height), Color.White, 0f, new Vector2(texture.Width / 2, texture.Height /2), 1f, SpriteEffects.None, 1f );
+                if (canPlace)
+                {
+                    spriteBatch.Draw(circleWhite, pos, new Rectangle(0, 0, circleWhite.Width, circleWhite.Height), Color.White, 0f, new Vector2(circleWhite.Width / 2, circleWhite.Height / 2), 1f, SpriteEffects.None, 1f);
+                }
+                else
+                {
+                    spriteBatch.Draw(circleRed, pos, new Rectangle(0, 0, circleRed.Width, circleRed.Height), Color.White, 0f, new Vector2(circleRed.Width / 2, circleRed.Height / 2), 1f, SpriteEffects.None, 1f);
+                }
+            }
+            spriteBatch.Draw(texture, pos, new Rectangle(0, 0, texture.Width, texture.Height), Color.White, 0f, Offset, 1f, SpriteEffects.None, 1f );
+            //spriteBatch.Draw(texture, pos, Color.White);
         }
 
         internal Tower Copy()

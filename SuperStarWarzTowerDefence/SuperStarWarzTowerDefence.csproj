@@ -39,14 +39,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Clock.cs" />
+    <Compile Include="Emitter.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameHandler.cs" />
     <Compile Include="GameObjects\Enemy.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObjects\Shot.cs" />
     <Compile Include="GameObjects\Tower\ExplosiveTower.cs" />
     <Compile Include="GameObjects\Tower\NormalTower.cs" />
     <Compile Include="GameObjects\Tower\Tower.cs" />
     <Compile Include="MapHandler.cs" />
+    <Compile Include="Particle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,6 +69,7 @@
     <Content Include="Content\Penguin_King.png" />
     <Content Include="Content\Penguin_Mad.png" />
     <Content Include="Content\Penguin_Normal.png" />
+    <Content Include="Content\snowball.png" />
     <Content Include="Content\Turtle.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

@@ -20,14 +20,18 @@ namespace SuperStarWarzTowerDefence
         MapHandler mh;
         List<Enemy> enemy;
         List<Tower> tower;
+        List<Shot> shot;
+        Emitter emitter;
         float floorpos = 0;
-
+        int range = 150;
         RenderTarget2D renderTarget;
         Texture2D turtleSprite;
         Texture2D penguinKing;
         Texture2D penguinNormal;
         Texture2D penguinMad;
         Texture2D floor;
+        public static Texture2D test;
+        public Texture2D shotsprite;
         Tower selcetedTower;
         //Vector2 pos = new Vector2();
         KeyboardState prevKeyState = new KeyboardState();
@@ -47,8 +51,15 @@ namespace SuperStarWarzTowerDefence
             penguinKing = game.Content.Load<Texture2D>(@"Penguin_King");
             penguinMad = game.Content.Load<Texture2D>(@"Penguin_Mad");
             penguinNormal = game.Content.Load<Texture2D>(@"Penguin_Normal");
+            shotsprite = game.Content.Load<Texture2D>(@"snowball");
+            test = game.Content.Load<Texture2D>(@"snowball");
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(game.Content.Load<Texture2D>("circle"));
+            emitter = new Emitter(textures, new Vector2(400, 240));
+            
             enemy = new List<Enemy>();
             tower = new List<Tower>();
+            shot = new List<Shot>();
             mh.LoadContent();
             path = mh.GetSimplePath();
             UpdateRenderTarget(spriteBatch);
@@ -104,8 +115,23 @@ namespace SuperStarWarzTowerDefence
             {
                 e.Update();
             }
-
-            
+            if (selcetedTower != null)
+            {
+                canPlace(selcetedTower);
+            }
+            foreach (Tower t in tower)
+            {
+                foreach (Enemy e in enemy)
+                {
+                    Shoot(t, e);
+                }
+            }
+            foreach (Shot s in shot)
+            {
+                s.Update();
+            }
+            emitter.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            emitter.Update();
 
             clock.AddTime(0.01f);
         }
@@ -124,6 +150,54 @@ namespace SuperStarWarzTowerDefence
                 
         }
 
+        public void Shoot(Tower t, Enemy e)
+        {
+            if (Vector2.Distance(t.Pos, e.GetPos()) < range && clock.Timer() < 0.01f)
+            {
+
+                shot.Add(new Shot(shotsprite, t.Pos, e));
+            }
+        }
+
+        public void KillEnemy()
+        {
+            foreach (Enemy e in enemy)
+            {
+                foreach (Shot s in shot)
+                {
+                    if (e.hitbox.Intersects(s.hitbox))
+                    {
+                        e.alive = false;
+                        s.alive = false;
+                    }
+                }
+            }
+        }
+
+        public void RemoveDeadObjects()
+        {
+            foreach (Enemy e in enemy)
+            {
+                for (int i = enemy.Count - 1; i >= 0; i--)
+                {
+                    if (!e.alive)
+                    {
+                        enemy.RemoveAt(i);
+                    }
+                }
+            }
+            foreach (Shot s in shot)
+            {
+                for (int e = shot.Count - 1; e >= 0; e--)
+                {
+                    if (!s.alive)
+                    {
+                        shot.RemoveAt(e);
+                    }
+                }
+            }
+        }
+
         public void DrawPath(SpriteBatch spriteBatch)
         {
             floorpos = path.beginT - 100;
@@ -137,15 +211,11 @@ namespace SuperStarWarzTowerDefence
         public bool canPlace(Tower t)
         {
             Color[] pixels = new Color[t.texture.Width * t.texture.Height];
-            Color[] pixels2 = new Color[t.texture.Width * t.texture.Height];
-            t.texture.GetData<Color>(pixels2);
-            renderTarget.GetData(0, new Rectangle((int)t.Pos.X, (int)t.Pos.Y, t.texture.Width, t.texture.Height), pixels, 0, pixels.Length);
-            for (int i = 0; i < pixels.Length; ++i)
-            {
-                if (pixels[i].A > 0.0f && pixels2[i].A > 0.0f)
-                    return false;
-            }
-            return true;
+            renderTarget.GetData(0, new Rectangle((int)(t.Pos.X - t.Offset.X), (int)(t.Pos.Y - t.Offset.Y), t.texture.Width, t.texture.Height), pixels, 0, pixels.Length);
+            //renderTarget.GetData(0, new Rectangle((int)(t.Pos.X), (int)(t.Pos.Y), t.texture.Width, t.texture.Height), pixels, 0, pixels.Length);
+            bool isColliding = t.PixelCollition(pixels, new Rectangle(0, 0, t.texture.Width, t.texture.Height));
+            t.canPlace = isColliding;
+            return !isColliding;
         }
 
         public void UpdateRenderTarget(SpriteBatch spriteBatch)
@@ -165,15 +235,21 @@ namespace SuperStarWarzTowerDefence
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            emitter.Draw(spriteBatch);
             foreach (Enemy e in enemy)
             {
                 e.Draw(spriteBatch);
             }
-            
+
             if (selcetedTower != null)
             {
                 selcetedTower.Draw(spriteBatch);
             }
+            foreach (Shot s in shot)
+            {
+                s.Draw(spriteBatch);
+            }
+
             //mh.Draw(spriteBatch);
             //spriteBatch.Draw(penguinKing, new Rectangle(0, 0, penguinKing.Width, penguinKing.Height), Color.White);
             //path.Draw(spriteBatch);

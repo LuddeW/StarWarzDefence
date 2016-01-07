@@ -18,9 +18,7 @@ namespace SuperStarWarzTowerDefence
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1000;
-            graphics.PreferredBackBufferHeight = 1000;
-            //graphics.IsFullScreen = true;
+            
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -28,7 +26,11 @@ namespace SuperStarWarzTowerDefence
         protected override void Initialize()
         {
             
-            
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 1000;
+            //graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
+
             base.Initialize();
             
         }

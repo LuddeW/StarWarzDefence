@@ -12,32 +12,38 @@ namespace SuperStarWarzTowerDefence.GameObjects
     {
         Game1 game;
         int speed = 2;
-        float pos;
-
-        Texture2D texture;
+        
+        float currentpos;
+        Vector2 followPath;
+        public Rectangle hitbox;
+        public bool alive = true;
         SimplePath path;
-        public Enemy(Texture2D texture, Game1 game, SimplePath path) : base(texture, Vector2.Zero)
+        public Enemy(Texture2D texture, Game1 game, SimplePath path) : base(texture, Vector2.Zero,new Vector2(texture.Width / 2, texture.Height / 2))
         {
-            this.pos = path.beginT;
+            this.pos = path.GetPos(path.endT);
             this.texture = texture;
             this.game = game;
             this.path = path;
+            currentpos = path.beginT;
+            followPath = path.GetPos(currentpos + 0.1f) - path.GetPos(currentpos);
         }
 
-        public void Update()
+        public override void Update()
         {
-                  
-            pos += speed;
+
+            currentpos += speed;
+            hitbox = new Rectangle((int)pos.X, (int)pos.Y, texture.Width, texture.Height);
         }
 
         public Vector2 GetPos()
         {
-            return path.GetPos(pos);
+            return path.GetPos(currentpos);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, path.GetPos(pos), new Rectangle(0, 0, texture.Width, texture.Height), Color.White, 0f, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(texture, path.GetPos(currentpos), new Rectangle(0, 0, texture.Width, texture.Height), Color.White, 0f, Offset, 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(GameHandler.test, hitbox, Color.Red);
         }
     }
     
